@@ -101,6 +101,11 @@
                 <artifactId>iam-sdk</artifactId>
                 <version>${platform.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.maritime.platform</groupId>
+                <artifactId>platform-common-outbox</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
