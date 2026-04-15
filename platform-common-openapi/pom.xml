@@ -10,9 +10,9 @@
         <version>1.0.4</version>
     </parent>
 
-    <artifactId>platform-common-outbox</artifactId>
-    <name>platform-common-outbox</name>
-    <description>Transactional outbox pattern: entity, mapper, poller, publisher SPI</description>
+    <artifactId>platform-common-openapi</artifactId>
+    <name>platform-common-openapi</name>
+    <description>Shared OpenAPI/Knife4j setup: JWT security scheme, global headers, per-service props</description>
 
     <dependencies>
         <dependency>
@@ -20,16 +20,13 @@
             <artifactId>platform-common-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.maritime.platform</groupId>
-            <artifactId>platform-common-mybatis</artifactId>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>

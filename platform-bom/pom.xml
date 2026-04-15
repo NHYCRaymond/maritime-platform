@@ -6,7 +6,7 @@
 
     <groupId>com.maritime.platform</groupId>
     <artifactId>platform-bom</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <packaging>pom</packaging>
     <name>platform-bom</name>
     <description>BOM for maritime-platform: import this to manage all platform-common-* and iam-sdk versions</description>
@@ -16,7 +16,9 @@
         <spring-cloud.version>2023.0.2</spring-cloud.version>
         <spring-cloud-alibaba.version>2023.0.3.4</spring-cloud-alibaba.version>
         <mybatis-plus.version>3.5.7</mybatis-plus.version>
-        <platform.version>1.0.3</platform.version>
+        <springdoc.version>2.3.0</springdoc.version>
+        <knife4j.version>4.5.0</knife4j.version>
+        <platform.version>1.0.4</platform.version>
     </properties>
 
     <dependencyManagement>
@@ -53,6 +55,20 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <!-- SpringDoc OpenAPI -->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.version}</version>
+            </dependency>
+
+            <!-- Knife4j OpenAPI3 for Spring Boot 3.x (Jakarta EE) -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
             </dependency>
 
             <!-- Platform common modules -->
@@ -94,6 +110,11 @@
             <dependency>
                 <groupId>com.maritime.platform</groupId>
                 <artifactId>platform-common-feign</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.maritime.platform</groupId>
+                <artifactId>platform-common-openapi</artifactId>
                 <version>${platform.version}</version>
             </dependency>
             <dependency>

@@ -1,0 +1,2 @@
+com.maritime.platform.common.openapi.PlatformOpenApiAutoConfiguration
+com.maritime.platform.common.openapi.GlobalHeadersCustomizer
