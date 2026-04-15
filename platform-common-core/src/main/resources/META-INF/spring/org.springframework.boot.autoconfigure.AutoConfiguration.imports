@@ -1,1 +1,2 @@
 com.maritime.platform.common.core.config.SnowflakeIdAutoConfiguration
+com.maritime.platform.common.core.audit.OperationAuditAutoConfiguration
