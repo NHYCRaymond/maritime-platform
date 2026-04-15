@@ -7,12 +7,12 @@
     <parent>
         <groupId>com.maritime.platform</groupId>
         <artifactId>maritime-platform</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </parent>
 
     <artifactId>platform-common-redis</artifactId>
     <name>platform-common-redis</name>
-    <description>Redis: RedisTemplate config, distributed lock, cache utilities</description>
+    <description>Redis: RedisTemplate config, distributed lock, cache utilities, @DistributedLock annotation</description>
 
     <dependencies>
         <dependency>
@@ -26,6 +26,17 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <!-- Test: Testcontainers Redis for DistributedLockAspect integration tests -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
