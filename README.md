@@ -14,6 +14,7 @@ Shared platform commons + iam-sdk for maritime microservices.
 | `platform-common-redis` | RedisTemplate config, distributed lock utilities |
 | `platform-common-mq` | RabbitMQ topology, publisher-confirm sender |
 | `platform-common-metrics` | Micrometer + Prometheus, @BusinessMetric AOP |
+| `platform-common-notification` | Channel enum, NotificationDispatcher SPI, handler registry |
 | `platform-common-feign` | Feign client interfaces and shared DTOs for IAM intra-cluster calls |
 | `iam-sdk` | IAM SDK Spring Boot Starter for business system integration |
 

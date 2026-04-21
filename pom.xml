@@ -27,6 +27,7 @@
         <module>platform-common-redis</module>
         <module>platform-common-mq</module>
         <module>platform-common-outbox</module>
+        <module>platform-common-notification</module>
         <module>platform-common-metrics</module>
         <module>platform-common-feign</module>
         <module>platform-common-openapi</module>
@@ -234,6 +235,11 @@
             <dependency>
                 <groupId>com.maritime.platform</groupId>
                 <artifactId>platform-common-outbox</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.maritime.platform</groupId>
+                <artifactId>platform-common-notification</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
