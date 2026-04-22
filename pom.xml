@@ -13,7 +13,7 @@
 
     <groupId>com.maritime.platform</groupId>
     <artifactId>maritime-platform</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.7</version>
     <packaging>pom</packaging>
     <name>maritime-platform</name>
     <description>Shared platform commons + iam-sdk for maritime microservices</description>
@@ -48,7 +48,7 @@
         <spring-cloud-alibaba.version>2023.0.3.4</spring-cloud-alibaba.version>
 
         <!-- MyBatis-Plus -->
-        <mybatis-plus.version>3.5.7</mybatis-plus.version>
+        <mybatis-plus.version>3.5.16</mybatis-plus.version>
 
         <!-- SpringDoc OpenAPI -->
         <springdoc.version>2.3.0</springdoc.version>
