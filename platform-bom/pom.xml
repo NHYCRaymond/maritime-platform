@@ -6,7 +6,7 @@
 
     <groupId>com.maritime.platform</groupId>
     <artifactId>platform-bom</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <packaging>pom</packaging>
     <name>platform-bom</name>
     <description>BOM for maritime-platform: import this to manage all platform-common-* and iam-sdk versions</description>
@@ -18,7 +18,7 @@
         <mybatis-plus.version>3.5.7</mybatis-plus.version>
         <springdoc.version>2.3.0</springdoc.version>
         <knife4j.version>4.5.0</knife4j.version>
-        <platform.version>1.0.4</platform.version>
+        <platform.version>1.0.5</platform.version>
     </properties>
 
     <dependencyManagement>
@@ -144,7 +144,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages - maritime-platform</name>
-            <url>https://maven.pkg.github.com/NHYCRaymond/maritime-platform</url>
+            <url>https://maven.pkg.github.com/NHYCDoraemon/maritime-platform</url>
         </repository>
     </distributionManagement>
 
