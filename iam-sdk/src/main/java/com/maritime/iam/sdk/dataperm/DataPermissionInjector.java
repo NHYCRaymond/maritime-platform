@@ -1,6 +1,7 @@
 package com.maritime.iam.sdk.dataperm;
 
 import com.maritime.iam.sdk.context.IamContext;
+import com.maritime.iam.sdk.context.SystemContext;
 import com.maritime.iam.sdk.model.PagePolicy;
 import com.maritime.iam.sdk.model.PageSnapshot;
 import java.util.ArrayList;
@@ -47,9 +48,32 @@ public class DataPermissionInjector implements Interceptor {
             LoggerFactory.getLogger(
                     DataPermissionInjector.class);
 
+    private final ScopeColumns scopeColumns;
+
+    /** Backward-compatible ctor — uses {@link ScopeColumns#DEFAULT}. */
+    public DataPermissionInjector() {
+        this(ScopeColumns.DEFAULT);
+    }
+
+    /**
+     * @param scopeColumns column names for ORG / SELF / line_type
+     *                     injection; auto-config wires this from
+     *                     {@code iam.sdk.scope.*} properties.
+     */
+    public DataPermissionInjector(ScopeColumns scopeColumns) {
+        this.scopeColumns = scopeColumns != null
+                ? scopeColumns : ScopeColumns.DEFAULT;
+    }
+
     @Override
     public Object intercept(Invocation invocation)
             throws Throwable {
+        // Scheduled jobs / MQ consumers / outbox pollers mark
+        // themselves via SystemContext — they have no IamContext
+        // and would otherwise get 1=0 filtered to nothing.
+        if (SystemContext.isActive()) {
+            return invocation.proceed();
+        }
         ExpressionParser.SqlFragment combined =
                 buildCombinedFragment();
         if (combined.condition().isEmpty()) {
@@ -111,7 +135,7 @@ public class DataPermissionInjector implements Interceptor {
                 ctx.pageSnapshot().pagePolicies();
         List<String> lineRoles = ctx.lineRoles();
         return LineRoleFilter.generateLineCondition(
-                policies, lineRoles);
+                policies, lineRoles, scopeColumns);
     }
 
     private List<DataPermissionExpression> resolveExpressions() {

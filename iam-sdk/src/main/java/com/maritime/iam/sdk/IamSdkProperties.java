@@ -14,6 +14,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *     secret: ${IAM_APP_SECRET}
  *   sdk:
  *     fail-open: false
+ *     scope:
+ *       org-column: org_id        # default — override to e.g. creator_org_code
+ *       self-column: user_id      # default — override to e.g. creator_user_id
+ *       line-type-column: line_type
  *   event:
  *     enabled: false
  * </pre>
@@ -96,6 +100,7 @@ public class IamSdkProperties {
     public static class Sdk {
 
         private boolean failOpen = false;
+        private Scope scope = new Scope();
 
         public boolean isFailOpen() {
             return failOpen;
@@ -103,6 +108,50 @@ public class IamSdkProperties {
 
         public void setFailOpen(boolean failOpen) {
             this.failOpen = failOpen;
+        }
+
+        public Scope getScope() {
+            return scope;
+        }
+
+        public void setScope(Scope scope) {
+            this.scope = scope;
+        }
+    }
+
+    /**
+     * Column-name overrides for data-permission injection.
+     * Defaults preserve pre-1.0.8 hard-coded behaviour
+     * ({@code org_id} / {@code user_id} / {@code line_type}).
+     */
+    public static class Scope {
+
+        private String orgColumn = "org_id";
+        private String selfColumn = "user_id";
+        private String lineTypeColumn = "line_type";
+
+        public String getOrgColumn() {
+            return orgColumn;
+        }
+
+        public void setOrgColumn(String orgColumn) {
+            this.orgColumn = orgColumn;
+        }
+
+        public String getSelfColumn() {
+            return selfColumn;
+        }
+
+        public void setSelfColumn(String selfColumn) {
+            this.selfColumn = selfColumn;
+        }
+
+        public String getLineTypeColumn() {
+            return lineTypeColumn;
+        }
+
+        public void setLineTypeColumn(String lineTypeColumn) {
+            this.lineTypeColumn = lineTypeColumn;
         }
     }
 

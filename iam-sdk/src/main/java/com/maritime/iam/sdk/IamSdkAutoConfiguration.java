@@ -3,9 +3,11 @@ package com.maritime.iam.sdk;
 import com.maritime.platform.common.mq.topology.IamTopologyConfiguration;
 import com.maritime.platform.common.security.annotation.PublicApi;
 import com.maritime.platform.common.security.annotation.RequirePermission;
+import com.maritime.iam.sdk.annotation.BypassDataPermissionAspect;
 import com.maritime.iam.sdk.client.HmacSignatureGenerator;
 import com.maritime.iam.sdk.client.IamQueryClient;
 import com.maritime.iam.sdk.dataperm.DataPermissionInjector;
+import com.maritime.iam.sdk.dataperm.ScopeColumns;
 import com.maritime.iam.sdk.event.IamEventListener;
 import com.maritime.iam.sdk.filter.IamPermissionFilter;
 import com.maritime.iam.sdk.mapper.ApiToPageMapper;
@@ -105,10 +107,33 @@ public class IamSdkAutoConfiguration {
     }
 
     @Bean
+    ScopeColumns iamSdkScopeColumns(IamSdkProperties properties) {
+        IamSdkProperties.Scope scope = properties.getSdk().getScope();
+        return new ScopeColumns(
+                scope.getOrgColumn(),
+                scope.getSelfColumn(),
+                scope.getLineTypeColumn());
+    }
+
+    @Bean
     @ConditionalOnClass(name =
             "org.apache.ibatis.plugin.Interceptor")
-    DataPermissionInjector dataPermissionInjector() {
-        return new DataPermissionInjector();
+    DataPermissionInjector dataPermissionInjector(
+            ScopeColumns scopeColumns) {
+        return new DataPermissionInjector(scopeColumns);
+    }
+
+    /**
+     * Registers the AOP aspect that maps
+     * {@link com.maritime.iam.sdk.annotation.BypassDataPermission}
+     * to {@link com.maritime.iam.sdk.context.SystemContext}.
+     * Conditional on AspectJ so the SDK still loads without
+     * {@code spring-boot-starter-aop} on the classpath.
+     */
+    @Bean
+    @ConditionalOnClass(name = "org.aspectj.lang.annotation.Aspect")
+    BypassDataPermissionAspect bypassDataPermissionAspect() {
+        return new BypassDataPermissionAspect();
     }
 
     @Bean

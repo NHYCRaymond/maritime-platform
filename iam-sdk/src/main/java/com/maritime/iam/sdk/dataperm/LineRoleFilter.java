@@ -49,7 +49,8 @@ public final class LineRoleFilter {
 
     /**
      * Generates a parameterized SQL condition for line-type
-     * filtering using default column name {@code line_type}.
+     * filtering using default column names ({@code line_type} /
+     * {@code org_id} / {@code user_id}).
      *
      * @param pagePolicies policies from page snapshot
      * @param userLineRoles user's LINE role types from nav snapshot
@@ -61,23 +62,47 @@ public final class LineRoleFilter {
             List<PagePolicy> pagePolicies,
             List<String> userLineRoles) {
         return generateLineCondition(
+                pagePolicies, userLineRoles, ScopeColumns.DEFAULT);
+    }
+
+    /**
+     * Deprecated overload — prefer
+     * {@link #generateLineCondition(List, List, ScopeColumns)}.
+     * Retained so 1.0.7 callers keep compiling; only customises
+     * {@code line_type} and leaves ORG/SELF columns at defaults.
+     */
+    @Deprecated
+    public static ExpressionParser.SqlFragment generateLineCondition(
+            List<PagePolicy> pagePolicies,
+            List<String> userLineRoles,
+            String lineTypeColumn) {
+        return generateLineCondition(
                 pagePolicies, userLineRoles,
-                DEFAULT_LINE_TYPE_COLUMN);
+                new ScopeColumns(
+                        ScopeColumns.DEFAULT.orgColumn(),
+                        ScopeColumns.DEFAULT.selfColumn(),
+                        lineTypeColumn));
     }
 
     /**
      * Generates a parameterized SQL condition for line-type
-     * filtering with a custom line type column name.
+     * filtering using caller-supplied column names. Use this
+     * overload when your table does not follow the default
+     * {@code org_id} / {@code user_id} / {@code line_type}
+     * naming — see {@link ScopeColumns}.
      *
-     * @param pagePolicies   policies from page snapshot
-     * @param userLineRoles  user's LINE role types from nav snapshot
-     * @param lineTypeColumn column name for line type discrimination
+     * @param pagePolicies  policies from page snapshot
+     * @param userLineRoles user's LINE role types from nav snapshot
+     * @param columns       column overrides (non-null)
      * @return SQL fragment with union semantics
      */
     public static ExpressionParser.SqlFragment generateLineCondition(
             List<PagePolicy> pagePolicies,
             List<String> userLineRoles,
-            String lineTypeColumn) {
+            ScopeColumns columns) {
+        if (columns == null) {
+            columns = ScopeColumns.DEFAULT;
+        }
         if (pagePolicies == null || pagePolicies.isEmpty()) {
             return new ExpressionParser.SqlFragment("", List.of());
         }
@@ -104,18 +129,18 @@ public final class LineRoleFilter {
             }
 
             ExpressionParser.SqlFragment scopeFrag =
-                    buildScopeFragment(policy);
+                    buildScopeFragment(policy, columns);
 
             // Compose: line_type = ? [AND <scope>]
             if (scopeFrag.condition().isEmpty()) {
                 // ALL scope — just line_type match
-                branches.add(lineTypeColumn + " = ?");
+                branches.add(columns.lineTypeColumn() + " = ?");
                 allValues.add(heldType);
             } else if ("1 = 0".equals(scopeFrag.condition())) {
                 // Scope resolved to deny (missing context) — skip
                 continue;
             } else {
-                branches.add("(" + lineTypeColumn + " = ? AND "
+                branches.add("(" + columns.lineTypeColumn() + " = ? AND "
                         + scopeFrag.condition() + ")");
                 allValues.add(heldType);
                 allValues.addAll(scopeFrag.values());
@@ -152,7 +177,7 @@ public final class LineRoleFilter {
      * the line_type qualifier).
      */
     private static ExpressionParser.SqlFragment buildScopeFragment(
-            PagePolicy policy) {
+            PagePolicy policy, ScopeColumns columns) {
         String scopeType = policy.dataScopeType();
         if (scopeType == null) {
             scopeType = "ALL";
@@ -168,7 +193,8 @@ public final class LineRoleFilter {
                             "1 = 0", List.of());
                 }
                 yield new ExpressionParser.SqlFragment(
-                        "org_id = ?", List.of(orgCode));
+                        columns.orgColumn() + " = ?",
+                        List.of(orgCode));
             }
             case "SELF" -> {
                 String uid = IamContext.userId();
@@ -177,7 +203,8 @@ public final class LineRoleFilter {
                             "1 = 0", List.of());
                 }
                 yield new ExpressionParser.SqlFragment(
-                        "user_id = ?", List.of(uid));
+                        columns.selfColumn() + " = ?",
+                        List.of(uid));
             }
             case "CUSTOM" -> parseCustomExpr(
                     policy.dataScopeExpr());
